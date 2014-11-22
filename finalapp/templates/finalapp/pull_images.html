@@ -1,1 +1,13 @@
 <h3>Pull Images</h3>
+{{ name }}
+{% ifequal flag 2 %}
+    <h4>Image doesn't exist </h4>
+{% endifequal %}
+{% ifequal flag 1 %}
+    <h4>Image already exists</h4>
+{% endifequal %}
+{% ifequal flag 0 %}
+    <h4>Image has been downloaded</h4>
+{% endifequal %}
+<br/>
+

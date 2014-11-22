@@ -1,0 +1,8 @@
+<h3>View All Containers</h3>
+{{ containers }}
+{% for i in all_containers %}
+    <h3>New Container</h3>
+        {{i.Id}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{i.Warnings}}&nbsp;&nbsp;&nbsp;&nbsp;
+        <br/> 
+{% endfor %}

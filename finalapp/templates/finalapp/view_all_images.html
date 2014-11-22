@@ -1,1 +1,11 @@
 <h3>View All Images</h3>
+{% for i in all_images %}
+    <h3>New Image</h3>
+        {{i.RepoTags}}
+        {{ i.Created }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{i.Id}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{i.ParentId}}&nbsp;&nbsp;&nbsp;&nbsp;
+        {{i.Size}}&nbsp;&nbsp;&nbsp;&nbsp;
+        {{i.VirtualSize}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <br/> 
+{% endfor %}
