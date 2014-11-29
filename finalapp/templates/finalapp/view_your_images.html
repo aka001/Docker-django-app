@@ -1,0 +1,24 @@
+{% extends "finalapp/base.html" %}
+{% load i18n %}
+{% block content-body %}
+<h3>View Your Images</h3>
+<table class="table table-striped">
+<thead>
+	<th><b>Name</b></th>
+	<th><b>Id</b></th>
+	<th><b>Virtual Images</b></th>
+	<th><b>Created At</b></th>
+	<th><b>OS</b>/th>
+</thead>
+
+{% for i in all_images %}
+	<tr>
+        <td>{{ i.name }}</td>
+        <td>{{ i.id_images }}</td>
+        <td>{{ i.virtual_size }}</td>
+        <td>{{ i.created }}</td> 
+        <td>{{ i.os }}</td>
+    </tr> 
+{% endfor %}
+</table>
+{% endblock %}

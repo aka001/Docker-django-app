@@ -1,3 +1,13 @@
+{% extends "finalapp/base.html" %}
+{% load i18n %}
+{% block content-body %}
+<style>
+h3
+ {
+  color:white;
+ }
+ </style>
+<h3>Search for an Image</h3><br/>
 <form id="ask_images_form" method="post" action="/finalapp/ask_images/">
     {% csrf_token %}
 
@@ -6,3 +16,4 @@
     <button type="submit" class="btn btn-default">Submit</button>
 
 </form>
+{% endblock %}

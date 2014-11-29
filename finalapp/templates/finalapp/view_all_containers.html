@@ -1,8 +1,30 @@
+{% extends "finalapp/base.html" %}
+{% load i18n %}
+{% block content-body %}
+<style>
+h3
+ {
+  color:white;
+ }
+ </style>
 <h3>View All Containers</h3>
-{{ containers }}
-{% for i in all_containers %}
-    <h3>New Container</h3>
-        {{i.Id}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        {{i.Warnings}}&nbsp;&nbsp;&nbsp;&nbsp;
-        <br/> 
+<table class="table table-striped">
+<thead>
+	<th><b>Name Image</b></th>
+	<th><b>Id</b></th>
+	<th><b>Created At</b></th>
+	<th><b>Virtual size</b></th>
+	<th><b>OS</b>/th>
+</thead>
+
+{% for i in all_images %}
+	<tr>
+        <td>{{ i.name_image }}</td>
+        <td>{{ i.id_container }}</td>
+        <td>{{ i.created }}</td>
+        <td>{{ i.os }}</td>
+        <td>{{ i.virtual_size }}</td> 
+    </tr> 
 {% endfor %}
+</table>
+{% endblock %}

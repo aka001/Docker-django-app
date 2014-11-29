@@ -1,4 +1,23 @@
 <h3>Create Container</h3>
+{% if container_id == '0' %}
+<h4>Wrong command or image</h4>
+{% endif %}
+{% if container_id != '0' %}
+<h3>Container Successfully Created and executed the command</h3>
+<h5>name</h5>{{name}}
+<h5>container id</h5>{{container_id}}
+{% endif %}
+<h3> Want to commit the changes made to the system/image </h3>
+<form id="commit_from" method="post" action={{ bbc }}>
+    {% csrf_token %}
+Enter the message with which you want to commit: <input type="text" name="msg">
+<br/>
+Enter the repo in which you want to save it: <input type="text" name="repo">
+<br/>
+<button type="submit" class="btn btn-default">Submit</button>
+</form>
+<br/>
+<br/>
 
-<h3>Container Successfully Started</h3>
-{{name}}
+
+

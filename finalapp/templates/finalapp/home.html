@@ -1,16 +1,117 @@
 {% extends "finalapp/base.html" %}
 {% load i18n %}
 {% block content-body %}
-<ul>
-	<li><a href="/finalapp/ask_images">Pull Images</a></li>
-	<li><a href="/finalapp/view_all_images">View all images</a></li>
-	<li><a href="/finalapp/ask_search_images">Search images</a></li>
-	<li><a href="/finalapp/ask_del_images">Delete images</a></li>
-	<li><a href="/finalapp/ask_create_container">Create Container</a></li>
-	<li><a href="/finalapp/ask_start_container">Start Container</a></li>
-	<li><a href="/finalapp/ask_stop_container">Stop Container</a></li>
-	<li><a href="/finalapp/ask_restart_container">Restart Container</a></li>
-	<li><a href="/finalapp/ask_del_container">Delete Container</a></li>
-	<li><a href="/finalapp/view_all_containers">View all containers</a></li>
-</ul>
+ <div class="container">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2 templatemo-content-wrapper">
+                    <div class="templatemo-content">
+                        
+                        <section id="menu-section" class="active">
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 margin-bottom-20">
+                                	{% ifequal user.id 1 %}
+                                    	<a href="/finalapp/view_all_images/" class="change-section">
+                                        	<div class="black-bg btn-menu">
+                                            	<i class="fa fa-bars"></i>
+                                            	<h2>View images</h2>
+                                        	</div>
+                                    	</a>
+                                    {% else %}
+										<a href="/finalapp/view_all_images/" class="change-section">
+                                        	<div class="black-bg btn-menu">
+                                            	<i class="fa fa-bars"></i>
+                                            	<h2>View images</h2>
+                                        	</div>
+                                    	</a>
+                                    {% endifequal %}
+                                </div>
+                                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 margin-bottom-20">
+                                    <a href="/finalapp/ask_search_images" class="change-section">
+                                        <div class="black-bg btn-menu">
+                                            <i class="fa fa-search-minus"></i>
+                                            <h2>Search image</h2>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 margin-bottom-20">
+                                    <a href="/finalapp/ask_images" class="change-section">
+                                        <div class="black-bg btn-menu">
+                                            <i class="fa fa-cloud-download"></i>
+                                            <h2>Pull image</h2>
+                                        </div>
+                                    </a>
+                                </div>                     
+                                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 margin-bottom-20">
+                                    <a href="/finalapp/ask_del_images" class="change-section">
+                                        <div class="black-bg btn-menu">
+                                            <i class="fa fa-trash-o"></i>
+                                            <h2>Delete image</h2>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 margin-bottom-20">
+                                    <a href="/finalapp/view_all_containers" class="change-section">
+                                        <div class="black-bg btn-menu">
+                                            <i class="fa fa-desktop"></i>
+                                            <h2>View containers</h2>
+                                        </div>
+                                    </a>
+                                </div>
+                              <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 margin-bottom-20">
+                                    <a href="/finalapp/ask_start_container" class="change-section">
+                                        <div class="black-bg btn-menu">
+                                            <i class="fa fa-caret-square-o-right"></i>
+                                            <h2>Run container</h2>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 margin-bottom-20">
+                                    <a href="/finalapp/ask_restart_container" class="change-section">
+                                        <div class="black-bg btn-menu">
+                                            <i class="fa fa-refresh"></i>
+                                            <h2>Restart container</h2>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 margin-bottom-20">
+                                    <a href="/finalapp/ask_del_container" class="change-section">
+                                        <div class="black-bg btn-menu">
+                                            <i class="fa fa-trash-o"></i>
+                                            <h2>Delete container</h2>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                 <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 margin-bottom-20">
+                                    <a href="/finalapp/ask_push_images1" class="change-section">
+                                        <div class="black-bg btn-menu">
+                                            <i class="fa fa-trash-o"></i>
+                                            <h2>Push your commited image</h2>
+                                        </div>
+                                    </a>
+                                </div>
+                            	
+
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 margin-bottom-20">
+                                    <a href="/finalapp/ask_create_container" class="change-section">
+                                        <div class="black-bg btn-menu">
+                                            <h2>Create Container</h2>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 margin-bottom-20">
+                                    <a href="/finalapp/ask_stop_container" class="change-section">
+                                        <div class="black-bg btn-menu">
+                                            <h2>Stop Container</h2>
+                                        </div>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </section>
+<div class="image-section">
+                <div class="image-container">
+                    <img src="/static/images/zoom-bg-3.jpg" id="menu-img" class="main-img inactive" alt="Zoom HTML5 Template by templatemo.com">
+                    
+                </div>
+            </div> 
 {% endblock %}
