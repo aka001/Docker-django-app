@@ -9,7 +9,7 @@ h3,h4,h5
  </style>
 <form class="form-inline" id="ask_images_formi1" method="post" action="/finalapp/ask_push_images3/">
     {% csrf_token %}
-    <h4>Name of the image to be Commited</h4>
+    <h4>Name of the image to be Pushed</h4>
     <select name="name">
     	{% for image in image_name %}
     		<option value={{ image }}>{{ image }}</option>

@@ -1,7 +1,6 @@
 from django.shortcuts import render
 
 # Create your views here.
-import socket
 import httplib
 import json
 import os
@@ -33,33 +32,17 @@ def home(request):
     context={}
     return render(request,'finalapp/home.html',context)
 
-@login_required
-def deploy_war_app(request,ip_app):
-    if request.user.is_authenticated:
-        user=request.user.username
-    if request.method == 'POST':
-        admin=request.POST['admin_pass']
-        port_name=request.POST['port_cont']
-        url_fin='docker run -d -p '
-        url_fin=url_fin+str(port_name)+':'+str(port_name)+" -e TOMCAT_PASS="+str(admin)+" tutum/tomcat"
-        os.system(url_fin)
-        ip_app=([(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]) 
-        ip_app+=':'+str(port_name)
-        return HttpResponseRedirect('/finalapp/deploy_war_app/'+(ip_app)+'/')
-    uuid=request.user.id
-    context={'user':user, 'ip_app':ip_app}
-    return render(request,'finalapp/deploy_war_app.html',context)
 
 @login_required
 def view_your_images(request):
     if request.user.is_authenticated:
         user=request.user.username
     uuid=request.user.id
-    image_list=User_Image.objects.all().filter(uid=uuid)
-    '''image_id=[]
+    image_list=Image.objects.all().filter(uid=uuid)
+    image_id=[]
     for images in image_list:
-        image_id.append(images.id_images)'''
-    context={'user':user, 'all_images':image_list}
+        image_id.append(images.id_images)
+    context={'user':user, 'image_id':image_id}
     return render(request,'finalapp/view_your_images.html',context)
 
 
@@ -89,8 +72,8 @@ def view_all_images(request):
         new_key=[]
         for i in key:
             new_key.append(str(i))'''
-	r2=Image.objects.all()
-        context={'all_images':r2}
+        r1=Image.objects.all()
+        context={'all_images':r1}
         return render(request,'finalapp/view_all_images.html',context)
 
 #   cli = Client(base_url='unix://var/run/docker.sock',version='1.12')
@@ -148,19 +131,23 @@ def pull_images(request,name):
         a=r1.read()
         a=json.loads(a)
         form.id_images = a['Id']
-        form.name = name
+	form.name = a['Os']
         #form.id_images = new_img['Id']
         form.os = a['Os']
         form.virtual_size = a['VirtualSize']
         form.created = a['Created']
-        print a
+ 
         #form.virtual_size = r1['VirtualSize']
         #form.repotags = r1['RepoTags'][0]
         form.save()
+        '''else:
+            flag=1'''
     else:
         flag=2
     context={'name':name, 'flag':flag, 'a':a}
     return render(request,'finalapp/pull_images.html',context)
+
+
 
 
 @login_required
@@ -190,10 +177,6 @@ def ask_create_container(request):
 
     context={'user':user,'image_id':image_id}
     return render(request,'finalapp/ask_create_container.html',context)
-
-
-
-
 
     
 @login_required
@@ -251,6 +234,7 @@ def create_container(request,image,cmd,cont_id):
     context={'name':ret_dict,'container_id':container_id,'bbc':bbc}
     return render(request,'finalapp/create_container.html',context)
 
+
 @login_required
 def commit_container(request,container_id,msg,repo):
     new_conn = httplib.HTTPConnection('172.17.42.1:4243')
@@ -283,14 +267,11 @@ def commit_container(request,container_id,msg,repo):
     "22/tcp": {}\
     }\
     }'
-    '''print "container_id"
+    print "container_id"
     print container_id
     print repo
-    print msg'''
+    print msg
     repo = repo.replace(".","/")
-    if repo[-1] in "/":
-        repo = repo[:-1]
-    print "reeeeeepo"
     print repo
     new_conn.request("POST","/commit?container=" + str(container_id) + "&comment=" + str(msg) + "&repo=" + str(repo))
     r1 = new_conn.getresponse()
@@ -311,9 +292,8 @@ def commit_container(request,container_id,msg,repo):
         print "asdddddddddd"
         print new_img['Id']
         form.id_images = new_img['Id']
-        if '/' in repo[-1]:
-            repo = repo[:-1]
-            #repo = repo.replace("/",".")
+        if '/' in repo:
+            repo = repo.replace("/","")
         print "reeeeeeeeeeeepo"
         print repo
         form.name = repo
@@ -325,26 +305,14 @@ def commit_container(request,container_id,msg,repo):
         #form.virtual_size = r1['VirtualSize']
         #form.repotags = r1['RepoTags'][0]
         form.save()
-
-        form = Image()
-        form.uid=request.user.id
-        form.name = repo
-        form.virtual_size = new_img['VirtualSize']
-        form.id_images = new_img['Id']
-        form.created = new_img['Created']
-        form.os = new_img['Os']
-        form.cmd = new_img['ContainerConfig']['Cmd']
-        form.image = new_img['ContainerConfig']['Image']
-        #form.virtual_size = r1['VirtualSize']
-        #form.repotags = r1['RepoTags'][0]
-        form.save()
     else:
         new_img_id = '0'
         new_img={}
     print "new_img"
-    print new_img
-    context={ 'new_img_id':new_img_id, 'new_img':new_img, 'repo':repo }
+    print new_img['Id']
+    context={ 'new_img_id':new_img_id, 'new_img':new_img }
     return render(request,'finalapp/commit_container.html',context)
+
 
 
 @login_required
@@ -390,7 +358,7 @@ def ask_del_images(request):
     if request.method == 'POST':
         idd= request.POST['id']
         print "asdasd"
-        return HttpResponseRedirect('/finalapp/delete_images/'+(idd)+'/')
+        return HttpResponseRedirect('/finalapp/delete_commited_images/'+(idd)+'/')
     uuid=request.user.id
     image_list=Image.objects.all().filter(uid=uuid)
     image_id=[]
@@ -469,7 +437,7 @@ def ask_push_images3(request):
     for images in image_list:
         image_name.append(images.name)
     print image_name
-    #print image_name[0]
+    print image_name[0]
     #image_id=[]
     #for images in image_list:
      #   image_id.append(images.name)
@@ -481,20 +449,12 @@ def ask_push_images3(request):
 def push_images(request,img_name):
     print "img_nameaaaaaaaa"
     print img_name
-    #if '/' in img_name:
-     #   img_name = img_name.replace("/",'')
-    #a = request.session['abc']
-    c = img_name
-    print "saaaaaaaaaaaa"
-    print c
-    ret = os.system("docker push " + c)
+    if '/' in img_name:
+        img_name = img_name.replace("/",'')
+    ret = os.system("docker push " + img_name)
     context = {'ret':ret}
     print ret
     return render(request,'finalapp/push_images.html',context)
-
-
-
-
 
 @login_required
 def delete_images(request,idd):
@@ -507,51 +467,22 @@ def delete_images(request,idd):
     print r2.status
     r2=r2.read()
     print r2
-    nameit=Image.objects.filter(id_images=idd)
-    if(nameit):
-        nameit=nameit[0]
-        nameit=nameit.name
-    else:
-        nameit="ubuntu"
-
-    check=Image.objects.filter(id_images=idd)
-    if(check):
-        check.delete()
-
-    check=User_Image.objects.filter(id_images=idd)
-    if(check):
-        check.delete()
-        
+    if "error" not in r2:
+        print idd
+        Image.objects.filter(id_images=idd).delete()
     #print r1.read()
     #r1=r1.read()
-    context={'idd':idd, 'nameit':nameit}
+    context={'idd':idd}
     return render(request, 'finalapp/delete_images.html', context)
 
 @login_required
 def ask_stop_container(request):
-
     if request.user.is_authenticated:
         user=request.user.username
     if request.method == 'POST':
         container_id = request.POST['container_id']
         return HttpResponseRedirect('/finalapp/stop_container/'+(container_id)+'/')
-
     conn=httplib.HTTPConnection("localhost:4243")
-    conn.request("GET","/containers/json?all=1")
-    r1=conn.getresponse()
-    print r1.status
-    a=r1.read()
-    a=json.loads(a)
-    
-    image_id=[]
-    for image in a:
-        image_id.append(image['Id'])
-    print image_id
-    context={'all_containers':image_id}
-    return render(request,'finalapp/ask_stop_container.html',context)
-
-
-    '''conn=httplib.HTTPConnection("localhost:4243")
     image_del='/containers/json?all=1'
     print image_del
     conn.request("GET",image_del)
@@ -562,7 +493,7 @@ def ask_stop_container(request):
     for image in r2:
         image_id.append(image['Id'])
     context={'user':user,'image_id':image_id}
-    return render(request,'finalapp/ask_stop_container.html',context)'''
+    return render(request,'finalapp/ask_stop_container.html',context)
  
  
  
@@ -601,11 +532,11 @@ def ask_start_container(request):
  
 @login_required
 def start_container(request,container_id):
-    container_id=container_id
+    container_id=container_id[0:3]
     new_conn = httplib.HTTPConnection('172.17.42.1:4243')
     headers = {"Content-type": "application/json","Accept": "text/plain"}
     print container_id
-    new_req_body='{"Binds":["/tmp:/tmp"], "Links":[], "LxcConf":{"lxc.utsname":"docker"},"PortBindings":{ "22/tcp": [{ "HostPort": "11022" }] },"PublishAllPorts":false, "Privileged":false, "Dns": ["8.8.8.8"],"DnsSearch": [""],"VolumesFrom": ["parent", "other:ro"], "CapAdd": ["NET_ADMIN"], "CapDrop": ["MKNOD"],"RestartPolicy": { "Name": "", "MaximumRetryCount": 0 },"NetworkMode": "bridge","Devices": []}'
+    new_req_body='{"Binds":["/tmp:/tmp"], "Links":["redis3:redis"], "LxcConf":{"lxc.utsname":"docker"},"PortBindings":{ "22/tcp": [{ "HostPort": "11022" }] },"PublishAllPorts":false, "Privileged":false, "Dns": ["8.8.8.8"],"DnsSearch": [""],"VolumesFrom": ["parent", "other:ro"], "CapAdd": ["NET_ADMIN"], "CapDrop": ["MKNOD"],"RestartPolicy": { "Name": "", "MaximumRetryCount": 0 },"NetworkMode": "bridge","Devices": []}'
     new_conn.request("POST", "/containers/" + container_id + "/start" , new_req_body, headers)
     r1 = new_conn.getresponse().read()
     context={'name':r1,'name':container_id}
@@ -633,7 +564,7 @@ def ask_del_container(request):
  
 @login_required
 def delete_container(request,container_id):
-    container_id=container_id
+    container_id=container_id[0:3]
     conn=httplib.HTTPConnection("localhost:4243")
     container_del='/containers/'
     container_del+=str(container_id)
@@ -668,14 +599,12 @@ def ask_restart_container(request):
  
 @login_required
 def restart_container(request,container_id):
-    container_id=container_id
-    new_conn = httplib.HTTPConnection('localhost:4243')
+    container_id=container_id[0:4]
+    new_conn = httplib.HTTPConnection('172.17.42.1:4243')
     headers = {"Content-type": "application/json","Accept": "text/plain"}
     print container_id
-    new_conn.request("POST", "/containers/" + container_id + "/restart?t=2", headers)
-    r1 = new_conn.getresponse()
-    print r1
-    r1 = r1.read()
+    new_conn.request("POST", "/containers/" + container_id + "/restart" , headers)
+    r1 = new_conn.getresponse().read()
     print r1
     context={'name':r1}
     return render(request,'finalapp/restart_container.html',context)

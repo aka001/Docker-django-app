@@ -2,20 +2,25 @@
 {% load i18n %}
 {% block content-body %}
 <style>
-h3
+h3,h4
  {
+  font-size:30px;
   color:white;
+  text-align:center;
  }
  </style>
 <h3>Search for an Image</h3><br/>
-<form id="ask_images_form" method="post" action="/finalapp/ask_search_images/">
+<form  id="ask_images_form" method="post" action="/finalapp/ask_search_images/">
     {% csrf_token %}
-    <div class="form-group">
-      <p style="color: black"><font size="5"><b>Id of the image to be searched</b></font></p>
-      <input type="text" class="form-control" id="name" name="search_name" 
-         placeholder="Enter Name">
-      <button type="submit" class="btn btn-success">Submit</button>
-   </div>
-</form>
 
+    <h4>Name of the image to be searched</h4>
+    <br/>
+    <input type="text" class="form-control" id="name" name="search_name" placeholder="Enter Name"><br/>
+    <button type="submit" class="btn btn-success">Submit</button>
+
+
+</form>
 {% endblock %}
+
+
+

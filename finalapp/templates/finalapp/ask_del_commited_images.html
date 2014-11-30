@@ -7,11 +7,12 @@ h3,h4
   color:white;
  }
  </style>
-<form id="ask_images_form" method="post" action="/finalapp/ask_start_container/">
+<h3>Delete committed Image</h3><br/>
+<form id="ask_images_form" method="post" action="/finalapp/ask_del_images/">
     {% csrf_token %}
 
-    <h4>Id of the image whose container you want to create</h4>
-    <select name="container_id">
+    <h4>Id of the image to be deleted</h4>
+    <select name="id">
     	{% for image in image_id %}
     		<option value={{ image }}>{{ image }}</option>
     	{% endfor %}

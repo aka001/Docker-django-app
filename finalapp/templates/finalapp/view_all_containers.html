@@ -2,28 +2,30 @@
 {% load i18n %}
 {% block content-body %}
 <style>
-h3
+h3,th,td
  {
+    text-align:center;
   color:white;
  }
  </style>
-<h3>View All Containers</h3>
-<table class="table table-striped">
+<h3>View Running Containers</h3>
+<br/>
+<table class="table table-normal">
 <thead>
-	<th><b>Name Image</b></th>
 	<th><b>Id</b></th>
+    <th><b>Image</b></th>
+    <th><b>Name</b></th>
+    <th><b>Status</b></th>
 	<th><b>Created At</b></th>
-	<th><b>Virtual size</b></th>
-	<th><b>OS</b>/th>
 </thead>
 
-{% for i in all_images %}
+{% for i in all_containers %}
 	<tr>
-        <td>{{ i.name_image }}</td>
-        <td>{{ i.id_container }}</td>
-        <td>{{ i.created }}</td>
-        <td>{{ i.os }}</td>
-        <td>{{ i.virtual_size }}</td> 
+        <td>{{ i.Id }}</td>
+        <td>{{ i.Image }}</td>
+         <td>{{ i.Names }}</td>
+        <td>{{ i.Status }}</td>
+        <td>{{ i.Created }}</td>
     </tr> 
 {% endfor %}
 </table>
